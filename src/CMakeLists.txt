@@ -13,11 +13,11 @@ target_compile_features (const_str PUBLIC cxx_std_20)
 
 
 target_include_directories(const_str PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/const_str>
+    $<BUILD_INTERFACE:${const_str_SOURCE_DIR}/include/const_str>
     $<INSTALL_INTERFACE:include/const_str>
 )
 
 target_include_directories(const_str PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${const_str_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
