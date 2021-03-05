@@ -32,10 +32,10 @@ public:
         return m_str [i];
     }
     
-    template <size_t I, size_t J>
-    friend constexpr auto operator== (const_str <I> const& lhs, const_str <J> const& rhs) -> bool
+    template <size_t J>
+    friend constexpr auto operator== (const_str const& lhs, const_str <J> const& rhs) -> bool
     {
-        if constexpr (I != J)
+        if constexpr (N != J)
             return false;
         
         for (int i = 0; i < N; ++i)
@@ -47,13 +47,13 @@ public:
     }
 
     
-    template <size_t I, size_t J>
-    friend constexpr auto operator== (const_str <I> const& lhs, char const(&rhs) [J]) -> bool
+    template <size_t J>
+    friend constexpr auto operator== (const_str const& lhs, char const(&rhs) [J]) -> bool
     {
-        if constexpr (I != J)
+        if constexpr (N != J)
             return false;
         
-        for (int i = 0; i < I; ++i)
+        for (int i = 0; i < N; ++i)
         {
             if (lhs.m_str [i] != rhs[i])
                 return false;
@@ -64,13 +64,13 @@ public:
     }
 
     
-    template <size_t M>
-    friend auto operator== (const_str <M> const& lhs, char const* rhs) -> bool
+
+    friend auto operator== (const_str const& lhs, char const* rhs) -> bool
     {
-        if (strlen(rhs) != M)
+        if (strlen(rhs) != N)
             return false;
         
-        for (int i = 0; i < M; ++i)
+        for (int i = 0; i < N; ++i)
         {
             if (lhs.m_str [i] != rhs[i])
                 return false;
@@ -84,3 +84,4 @@ public:
         return os;
     }
 };
+
