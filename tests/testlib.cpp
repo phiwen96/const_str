@@ -11,6 +11,10 @@ consteval int kiss (){return 0;}
 
 TEST_CASE( "Quick check", "[kiss]" ) {
     constexpr auto s1 = const_str {"hej"};
+    char const* s2 = s1;
+    cout << s2 << endl;
+    string s3 = s1;
+    cout << s3 << endl;
 //      cout << GPU_0_MAX_IMAGE_DIMENSION_1D << endl;
 //    cout << gpu<0>::features::fillModeNonSolid << endl;
 	std::cout << "hi" << std::endl;

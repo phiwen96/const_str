@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 using namespace std;
 
 template <int N>
@@ -83,5 +84,25 @@ public:
         os << s.m_str;
         return os;
     }
+    
+    auto c_str () const -> char const*
+    {
+        char* ret = (char*) __builtin_alloca (N);
+        strcpy (ret, m_str);
+        return ret;
+    }
+    
+    constexpr operator char const* () const
+    {
+        char* ret = (char*) __builtin_alloca (N);
+        strcpy (ret, m_str);
+        return ret;
+    }
+    
+    operator string () const
+    {
+        return m_str;
+    }
+    
 };
 
