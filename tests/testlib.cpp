@@ -10,6 +10,7 @@ using namespace std;
 consteval int kiss (){return 0;}
 
 TEST_CASE( "Quick check", "[kiss]" ) {
+    constexpr auto s1 = const_str {"hej"};
 //      cout << GPU_0_MAX_IMAGE_DIMENSION_1D << endl;
 //    cout << gpu<0>::features::fillModeNonSolid << endl;
 	std::cout << "hi" << std::endl;

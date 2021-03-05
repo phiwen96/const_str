@@ -35,11 +35,9 @@ public:
     template <size_t I, size_t J>
     friend constexpr auto operator== (const_str <I> const& lhs, const_str <J> const& rhs) -> bool
     {
-        return false;
-    }
-
-    friend constexpr auto operator== (const_str <N> const& lhs, const_str <N> const& rhs) -> bool
-    {
+        if constexpr (I != J)
+            return false;
+        
         for (int i = 0; i < N; ++i)
         {
             if (lhs.m_str [i] != rhs.m_str[i])
@@ -47,22 +45,24 @@ public:
         }
         return true;
     }
+
     
     template <size_t I, size_t J>
     friend constexpr auto operator== (const_str <I> const& lhs, char const(&rhs) [J]) -> bool
     {
-        return false;
-    }
-
-    friend constexpr auto operator== (const_str <N> const& lhs, char const(rhs) [N]) -> bool
-    {
-        for (int i = 0; i < N; ++i)
+        if constexpr (I != J)
+            return false;
+        
+        for (int i = 0; i < I; ++i)
         {
             if (lhs.m_str [i] != rhs[i])
                 return false;
         }
         return true;
+        
+        return false;
     }
+
     
     template <size_t M>
     friend auto operator== (const_str <M> const& lhs, char const* rhs) -> bool
