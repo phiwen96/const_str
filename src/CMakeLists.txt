@@ -7,6 +7,8 @@ add_library (const_str
 	${SOURCE_LIST}  ${HEADER_LIST} 
 )
 
+add_library (ph::const_str ALIAS const_str)
+
 target_include_directories (const_str PUBLIC ${const_str_SOURCE_DIR}/include)
 
 target_compile_features (const_str PUBLIC cxx_std_20)
