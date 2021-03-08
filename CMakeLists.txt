@@ -4,7 +4,10 @@ project (
 	const_str
 	VERSION 1.0
 	DESCRIPTION "Very nice project"
-	LANGUAGES CXX)	
+	LANGUAGES CXX
+)	
+
+add_subdirectory (cmake/phake)
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	
