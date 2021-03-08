@@ -7,6 +7,7 @@ project (
 	LANGUAGES CXX
 )	
 
+
 add_subdirectory (cmake/phake)
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
