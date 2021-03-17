@@ -3,6 +3,8 @@
 #include <string>
 using namespace std;
 
+
+
 template <int N>
 class const_str
 {
@@ -11,7 +13,7 @@ class const_str
     
 public:
     
-    consteval const_str (char const(& str) [N]) : m_size (N), m_str()
+    consteval const_str (char const (& str) [N]) : m_size (N), m_str()
     {
         std::copy (str, str + N, m_str);
     }
@@ -66,9 +68,10 @@ public:
 
     
 
-    friend auto operator== (const_str const& lhs, char const* rhs) -> bool
+    constexpr friend auto operator== (const_str const& lhs, char const* rhs) -> bool
     {
-        if (strlen(rhs) != N)
+//        cout << strlen(rhs) << endl << N << endl;
+        if (strlen(rhs) != N - 1)
             return false;
         
         for (int i = 0; i < N; ++i)
@@ -106,3 +109,29 @@ public:
     
 };
 
+
+template <size_t N>
+const_str (char const(& str) [N]) -> const_str <N>;
+
+
+
+
+template <char... c>
+struct _str
+{
+    inline static constexpr char str [sizeof... (c)] {c...};
+    friend ostream& operator<< (ostream& os, struct _str const& s)
+    {
+        os << s.str;
+        return os;
+    }
+};
+
+template <unsigned int N>
+constexpr char getch (char const (&s) [N], unsigned int i)
+{
+    return i >= N ? '\0' : s[i];
+}
+
+#define MACRO(z, n, text) BOOST_PP_COMMA_IF(n) getch (text, n)
+#define STR(s) decltype (_str<BOOST_PP_REPEAT (BOOST_PP_LIMIT_REPEAT, MACRO, s)> {})
