@@ -9,7 +9,7 @@ add_library (const_str
 
 ph_precompile (TARGET const_str PUBLIC PCH ${std_pch})
 
-add_library (ph::const_str ALIAS const_str)
+# add_library (ph::const_str ALIAS const_str)
 
 target_include_directories (const_str PUBLIC ${const_str_SOURCE_DIR}/include)
 
