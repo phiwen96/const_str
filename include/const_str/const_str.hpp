@@ -133,5 +133,5 @@ constexpr char getch (char const (&s) [N], unsigned int i)
     return i >= N ? '\0' : s[i];
 }
 
-#define MACRO(z, n, text) BOOST_PP_COMMA_IF(n) getch (text, n)
-#define STR(s) decltype (_str<BOOST_PP_REPEAT (BOOST_PP_LIMIT_REPEAT, MACRO, s)> {})
+#define _MACRO(z, n, text) BOOST_PP_COMMA_IF(n) getch (text, n)
+#define STR(s) decltype (_str<BOOST_PP_REPEAT (BOOST_PP_LIMIT_REPEAT, _MACRO, s)> {})
