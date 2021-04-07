@@ -13,15 +13,27 @@ class const_str
     
 public:
     
-    consteval const_str (char const (& str) [N]) : m_size (N), m_str()
+    constexpr const_str (char const (& str) [N]) : m_size (N), m_str()
     {
         std::copy (str, str + N, m_str);
     }
     
-    consteval auto size () const -> size_t
+    constexpr auto size () const -> size_t
     {
         return m_size;
     }
+    
+    const_str (const_str&& other) : m_size (N), m_str ()
+    {
+        copy (other.m_str, other.m_str + N, m_str);
+    }
+    
+    const_str (const_str const& other) : m_size (N), m_str ()
+    {
+        copy (other.m_str, other.m_str + N, m_str);
+    }
+    
+    
     
 //    template <int M>
 //    constexpr auto operator== (const_str <M> const&) -> bool
