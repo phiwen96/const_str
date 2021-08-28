@@ -1,36 +1,42 @@
 #pragma once
 #include <iostream>
 #include <string>
-using namespace std;
+#include <ph_concepts/concepts.hpp>
+//using namespace std;
+using namespace ph::concepts;
+
+
+#define cexpr inline static constexpr
 
 
 
-template <int N>
+
+template <Size auto N, Char C = char>
 class const_str
 {
     size_t m_size;
-    char m_str [N];
+    C m_str [N];
     
 public:
     
-    constexpr const_str (char const (& str) [N]) : m_size (N), m_str()
+    constexpr const_str (C const (& str) [N]) noexcept : m_size (N), m_str()
     {
         std::copy (str, str + N, m_str);
     }
     
-    constexpr auto size () const -> size_t
+    constexpr auto size () const noexcept -> size_t
     {
         return m_size;
     }
     
-    const_str (const_str&& other) : m_size (N), m_str ()
+    const_str (const_str&& other) noexcept : m_size (N), m_str ()
     {
-        copy (other.m_str, other.m_str + N, m_str);
+        std::copy (other.m_str, other.m_str + N, m_str);
     }
     
-    const_str (const_str const& other) : m_size (N), m_str ()
+    constexpr const_str (const_str const& other) noexcept : m_size (N), m_str ()
     {
-        copy (other.m_str, other.m_str + N, m_str);
+        std::copy (other.m_str, other.m_str + N, m_str);
     }
     
     
@@ -42,13 +48,13 @@ public:
 //    }
     
 
-    constexpr auto operator[] (int i) const -> char
+    constexpr auto operator[] (int i) const noexcept -> C
     {
         return m_str [i];
     }
     
     template <size_t J>
-    friend constexpr auto operator== (const_str const& lhs, const_str <J> const& rhs) -> bool
+    friend constexpr auto operator== (const_str const& lhs, const_str <J> const& rhs) noexcept -> bool
     {
         if constexpr (N != J)
             return false;
@@ -63,7 +69,7 @@ public:
 
     
     template <size_t J>
-    friend constexpr auto operator== (const_str const& lhs, char const(&rhs) [J]) -> bool
+    friend constexpr auto operator== (const_str const& lhs, C const(&rhs) [J]) noexcept -> bool
     {
         if constexpr (N != J)
             return false;
@@ -80,7 +86,7 @@ public:
 
     
 
-    constexpr friend auto operator== (const_str const& lhs, char const* rhs) -> bool
+    constexpr friend auto operator== (const_str const& lhs, C const* rhs) noexcept -> bool
     {
 //        cout << strlen(rhs) << endl << N << endl;
         if (strlen(rhs) != N - 1)
@@ -94,27 +100,27 @@ public:
         return true;
     }
     
-    friend auto operator<< (ostream& os, const_str const& s) -> ostream&
+    friend auto operator<< (std::ostream& os, const_str const& s) noexcept -> std::ostream&
     {
         os << s.m_str;
         return os;
     }
     
-    auto c_str () const -> char const*
+    auto c_str () const noexcept -> C const*
+    {
+        char* ret = (C*) __builtin_alloca (N);
+        strcpy (ret, m_str);
+        return ret;
+    }
+    
+    constexpr operator C const* () const noexcept
     {
         char* ret = (char*) __builtin_alloca (N);
         strcpy (ret, m_str);
         return ret;
     }
     
-    constexpr operator char const* () const
-    {
-        char* ret = (char*) __builtin_alloca (N);
-        strcpy (ret, m_str);
-        return ret;
-    }
-    
-    operator string () const
+    operator std::string () const noexcept
     {
         return m_str;
     }
@@ -132,7 +138,7 @@ template <char... c>
 struct _str
 {
     inline static constexpr char str [sizeof... (c)] {c...};
-    friend ostream& operator<< (ostream& os, struct _str const& s)
+    friend std::ostream& operator<< (std::ostream& os, struct _str const& s)
     {
         os << s.str;
         return os;
@@ -178,3 +184,34 @@ namespace Color {
     Color::Modifier def(Color::FG_DEFAULT);
 
 */
+
+
+namespace ph::concepts
+{
+    template <template <Size auto, typename...> typename T, Size auto n>
+    struct StringHelper <T <n>>
+    {
+        cexpr bool is_string = requires (T <n> t, size_t i)
+        {
+            {t [i]} -> Char;
+        };
+        
+        cexpr bool known_bounds = requires (T <n> t)
+        {
+            {t.size ()} -> Size;
+        };
+        
+        cexpr bool dynamic = requires (T <n> t)
+        {
+            t = "nej";
+        };
+        
+        static inline constexpr auto size () noexcept -> Size auto
+        {
+            return n;
+        }
+    };
+}
+
+
+#undef cexpr
